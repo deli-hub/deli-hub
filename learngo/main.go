@@ -11,8 +11,17 @@ func multiply(a, b int) int {
 }
 
 // 다중 값 리턴 시
-func lenAndUpeer(name string) (int, string) {
-	return len(name), strings.ToUpper(name)
+// func lenAndUpeer(name string) (int, string) {
+// 	return len(name), strings.ToUpper(name)
+// }
+
+// naked return으로 작성
+func lenAndUpeer(name string) (length int, uppercase string) {
+	// defer -> 해당 함수가 끝난 후에 실행될 함수
+	defer fmt.Println("I'm done")
+	length = len(name)
+	uppercase = strings.ToUpper(name)
+	return
 }
 
 // 다중 파라미터 받기
@@ -35,6 +44,8 @@ func main() {
 
 	fmt.Println(multiply(2, 2))
 
-	totalLength, _ := lenAndUpeer("goTest")
-	fmt.Println(totalLength)
+	totalLength, upper := lenAndUpeer("goTest")
+	// 이 시점에서 위에 작성한 defer 함수가 실행된다.
+	// 그리고 totalLength와 upper을 출력
+	fmt.Println(totalLength, upper)
 }
