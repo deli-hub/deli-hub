@@ -29,6 +29,7 @@ func repeatMe(words ...string) {
 	fmt.Println(words)
 }
 
+// LOOP
 func superAdd(numbers ...int) int {
 	// range가 numbers 안에서 조건에 맞는 경우 loop를 돌 수 있게 해준다.
 	// Golang에서는 loop에서 for만 사용가능(for in, foreach는 없다)
@@ -45,6 +46,26 @@ func superAdd(numbers ...int) int {
 		total += number
 	}
 	return total
+}
+
+// if else
+func canIDrink(age int) bool {
+
+	if koreanAge := age + 2; koreanAge < 18 {
+		return false
+	}
+	return true
+}
+
+// switch
+func canIDrinkNow(age int) bool {
+	switch koreanAge := age + 2; koreanAge {
+	case 10:
+		return false
+	case 18:
+		return true
+	}
+	return false
 }
 
 func main() {
@@ -69,4 +90,7 @@ func main() {
 
 	result := superAdd(1, 2, 3, 4, 5, 6)
 	fmt.Println(result)
+
+	fmt.Println(canIDrink(16))
+	fmt.Println(canIDrinkNow(16))
 }
