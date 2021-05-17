@@ -68,7 +68,19 @@ func canIDrinkNow(age int) bool {
 	return false
 }
 
+/** STRUCT */
+type person struct {
+	name    string
+	age     int
+	favFood []string
+}
+
 func main() {
+
+	favFood := []string{"pizza", "gobchang"}
+	// merry := person{"merry", 20, favFood}
+	merry := person{name: "merry", age: 20, favFood: favFood}
+	fmt.Println(merry)
 
 	repeatMe("nico", "lynn", "dal", "marl", "flynn")
 
@@ -88,12 +100,14 @@ func main() {
 	// 그리고 totalLength와 upper을 출력
 	fmt.Println(totalLength, upper)
 
+	/* FOR / IF~ELSE / SWITCH */
 	result := superAdd(1, 2, 3, 4, 5, 6)
 	fmt.Println(result)
 
 	fmt.Println(canIDrink(16))
 	fmt.Println(canIDrinkNow(16))
 
+	/* POINTERS */
 	c := 3
 	d := c
 	e := &c
@@ -106,4 +120,21 @@ func main() {
 
 	fmt.Println(c, *e)
 	// 10 10
+
+	/* ARRAYS */
+	// GO의 배열은 길이를 명시해야하는데, 유동적인 배열을 사용하고 싶다면 slice를 사용한다.
+	// 아래가 slice의 사용 예이다.
+	names := []string{"nico", "lynn", "dal"}
+	fmt.Println(names)
+
+	names = append(names, "flynn") // append는 값이 추가된 배열을 반환한다. (Flynn이 추가된다.)
+	fmt.Println(names)
+
+	/** MAP */
+	nico := map[string]string{"name": "nico", "age": "12"}
+	fmt.Println(nico)
+
+	for key, value := range nico {
+		fmt.Println(key, value)
+	}
 }
