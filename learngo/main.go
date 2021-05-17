@@ -29,6 +29,24 @@ func repeatMe(words ...string) {
 	fmt.Println(words)
 }
 
+func superAdd(numbers ...int) int {
+	// range가 numbers 안에서 조건에 맞는 경우 loop를 돌 수 있게 해준다.
+	// Golang에서는 loop에서 for만 사용가능(for in, foreach는 없다)
+	// for index, number := range numbers {
+	// 	fmt.Println(index, number)
+	// }
+
+	// for i := 0; i < len(numbers); i++ {
+	// 	fmt.Println(numbers[i])
+	// }
+
+	total := 0
+	for _, number := range numbers {
+		total += number
+	}
+	return total
+}
+
 func main() {
 
 	repeatMe("nico", "lynn", "dal", "marl", "flynn")
@@ -48,4 +66,7 @@ func main() {
 	// 이 시점에서 위에 작성한 defer 함수가 실행된다.
 	// 그리고 totalLength와 upper을 출력
 	fmt.Println(totalLength, upper)
+
+	result := superAdd(1, 2, 3, 4, 5, 6)
+	fmt.Println(result)
 }
