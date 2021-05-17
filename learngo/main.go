@@ -93,4 +93,17 @@ func main() {
 
 	fmt.Println(canIDrink(16))
 	fmt.Println(canIDrinkNow(16))
+
+	c := 3
+	d := c
+	e := &c
+	fmt.Println(c, d)
+	// 3 3
+
+	c = 10
+	fmt.Println(c, d)
+	// 10 3
+
+	fmt.Println(c, *e)
+	// 10 10
 }
