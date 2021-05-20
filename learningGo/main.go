@@ -1,10 +1,14 @@
 package main
 
-import "std/github.com/deli-hub/learningGo/banking"
+import (
+	"fmt"
+
+	"github.com/deli-hub/learningGo/accounts"
+)
 
 func main() {
-	account := banking.Account {
-		Owner : "merry",
-		Balance : 1000
-	}
+	account := accounts.NewAccount("merry")
+	// 아래 코드는 작동하지 않는다. balance가 private기 때문!
+	// account.balance = 10000
+	fmt.Println(account)
 }
