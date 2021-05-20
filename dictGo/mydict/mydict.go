@@ -11,6 +11,7 @@ type Dictionary map[string]string
 func (d Dictionary) Search(word string) (string, error) {
 	value, exists := d[word]
 	if exists {
+		// nil == null
 		return value, nil
 	}
 	return "", errNotFound
