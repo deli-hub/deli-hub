@@ -8,10 +8,16 @@ import (
 
 var errRequestFailed = errors.New("request Failed")
 
+type requestResult struct {
+	url    string
+	status string
+}
+
 func main() {
 	// var results = map[string]string{}
 	// make(map) => map을 만들어주는 함수(초기화까지 해줌)
-	var results = make(map[string]string)
+	results := make(map[string]string)
+	c := make(chan requestResult)
 	urls := []string{
 		"https://www.airbnb.com",
 		"https://www.google.com",
@@ -23,22 +29,34 @@ func main() {
 	}
 
 	for _, url := range urls {
-		result := "OK"
+		// result := "OK"
 		// hit : 인터넷 웹 서버의 파일 하나에 접속하는 것을 뜻함
-		err := hitUrl(url)
-		if err != nil {
-			result = "FAILED"
-		}
+		// err :=
+		go hitUrl(url, c)
+		// if err != nil {
+		// result = "FAILED"
+		// }
 		// 해당 url을 key로, err여부(result)를 value로
-		results[url] = result
+		// results[url] = result
 	}
 
 	// 터미널에 찍히는 값을 편하게 보기 위함
-	for _, result := range results {
-		fmt.Println(result)
+	// for _, result := range results {
+	// 	fmt.Println(result)
+	// }
+
+	for i := 0; i < len(urls); i++ {
+		result := <-c
+		results[result.url] = result.status
+	}
+
+	for url, status := range results {
+		fmt.Println(url, status)
 	}
 }
 
+/* CHECKER 예제 함수*/
+/*
 func hitUrl(url string) error {
 	fmt.Println("Checking:", url)
 	// 아래는 Go의 standard library
@@ -49,4 +67,16 @@ func hitUrl(url string) error {
 		return errRequestFailed
 	}
 	return nil
+}*/
+
+/* CHANNEL 예제 함수*/
+// 이 함수는 채널이 보내기만 가능하다 👇
+func hitUrl(url string, c chan<- requestResult) {
+	// fmt.Println("Checking:", url)
+	resp, err := http.Get(url)
+	status := "OK"
+	if err != nil || resp.StatusCode >= 400 {
+		status = "FAILED"
+	}
+	c <- requestResult{url: url, status: status}
 }

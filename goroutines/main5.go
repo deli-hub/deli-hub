@@ -36,7 +36,7 @@ func main() {
 	fmt.Println("Got the first msg")
 	// once we got the msg from upper line, we're getting the message below from channel until we get another msg.
 	// SW가 들어오고 Chris가 들어온다는 등의 순서는 없다. 다만 동시수행돼서 먼저 들어오는 게 resultOne이 된다.
-	// 이런 식으로 다음 기능(?)이 수행될까지 기다리게 하는 작업을 blocking operation 이라고 한다.
+	// 이런 식으로 다음 기능(?)이 수행될까지 기다리게 하는 작업을 blocking operation 이라고 한다. (동기식 작업)
 	fmt.Println("Received second msg:: ", resultTwo)
 	fmt.Println("DONE")
 
