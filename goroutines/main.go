@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 )
 
 func main() {
@@ -18,15 +17,32 @@ func main() {
 	/* CHANNEL */
 	//Channel -> goroutine이랑 메인함수 사이에 정보를 전달하기 위한 방법
 	// make(chan infoType)
-	c := make(chan bool)
+	c := make(chan string)
 
 	people := [2]string{"SW", "Chris"}
 	for _, person := range people {
 		// we're gonna check if the person is sexy
 		go isSexy(person, c)
 	}
+
+	resultOne := <-c
+	resultTwo := <-c
+
 	// receiving msg from chan
-	fmt.Println(<-c)
+	fmt.Println("Waiting for messages")
+	// getting a message from channel
+	fmt.Println("Received first msg:: ", resultOne)
+	fmt.Println("Got the first msg")
+	// once we got the msg from upper line, we're getting the message below from channel until we get another msg.
+	// SW가 들어오고 Chris가 들어온다는 등의 순서는 없다. 다만 병행수행돼서 먼저 들어오는 게 resultOne이 된다.
+	// 이런 식으로 다음 기능(?)이 수행될까지 기다리게 하는 작업을 blocking operation 이라고 한다.
+	fmt.Println("Received second msg:: ", resultTwo)
+	fmt.Println("DONE")
+
+	for i := 0; i < len(people); i++ {
+		fmt.Println("Waiting for ", i)
+		fmt.Println(<-c) // 배열 people의 인원이 추가 될 경우 resultThree, four, five..늘리지말고 loop를 사용한다.
+	}
 
 }
 
@@ -40,8 +56,9 @@ func main() {
 }*/
 
 /** CHANNEL example*/
-func isSexy(person string, c chan bool) {
-	time.Sleep(time.Second * 5)
-	// c라는 채널에 true라는 메시지를 보낸다. (return으로 보내지 않음)
-	c <- true
+// c chan 후에는 chan에서 주고 받을 데이터의 형식을 표기해준다.
+func isSexy(person string, c chan string) {
+	// time.Sleep(time.Second * 3)
+	// c라는 채널에 메시지를 보낸다. (return으로 보내지 않음)
+	c <- person + " is sexy"
 }
