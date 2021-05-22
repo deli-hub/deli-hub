@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 func main() {
@@ -34,7 +35,7 @@ func main() {
 	fmt.Println("Received first msg:: ", resultOne)
 	fmt.Println("Got the first msg")
 	// once we got the msg from upper line, we're getting the message below from channel until we get another msg.
-	// SW가 들어오고 Chris가 들어온다는 등의 순서는 없다. 다만 병행수행돼서 먼저 들어오는 게 resultOne이 된다.
+	// SW가 들어오고 Chris가 들어온다는 등의 순서는 없다. 다만 동시수행돼서 먼저 들어오는 게 resultOne이 된다.
 	// 이런 식으로 다음 기능(?)이 수행될까지 기다리게 하는 작업을 blocking operation 이라고 한다.
 	fmt.Println("Received second msg:: ", resultTwo)
 	fmt.Println("DONE")
@@ -47,7 +48,7 @@ func main() {
 }
 
 /** GOROUTINE*/
-/*func mainItCount(person string) {
+/*func makeItCount(person string) {
 	for i := 0; i < 10; i++ {
 		fmt.Println(person, "is sexy", i)
 		// 1초 쉬고 다시 수행된다. (모든 과정을 끝내는 데 걸리는 시간은 20초)
@@ -58,7 +59,7 @@ func main() {
 /** CHANNEL example*/
 // c chan 후에는 chan에서 주고 받을 데이터의 형식을 표기해준다.
 func isSexy(person string, c chan string) {
-	// time.Sleep(time.Second * 3)
+	time.Sleep(time.Second * 3)
 	// c라는 채널에 메시지를 보낸다. (return으로 보내지 않음)
 	c <- person + " is sexy"
 }
