@@ -1,12 +1,11 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 )
 
-var errRequestFailed = errors.New("request Failed")
+// var errRequestFailed = errors.New("request Failed")
 
 type requestResult struct {
 	url    string
