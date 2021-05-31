@@ -25,9 +25,16 @@ func Scrape(term string) {
 	var baseURL string = "https://www.jobkorea.co.kr/Search/?stext=" + term
 	var jobs []extractedJob
 
+	c := make(chan []extractedJob)
 	totalPages := getPages(baseURL)
+
 	for i := 0; i < totalPages; i++ {
-		extractedJobs := getPage(i, baseURL)
+		go getPage(i, baseURL, c)
+	}
+
+	for i := 0; i < totalPages; i++ {
+		// extractedJobs := getPage(i, baseURL)
+		extractedJobs := <-c
 		jobs = append(jobs, extractedJobs...)
 	}
 
@@ -57,8 +64,10 @@ func getPages(url string) int {
 	return pages
 }
 
-func getPage(page int, url string) []extractedJob {
+func getPage(page int, url string, mainC chan<- []extractedJob) {
 	var jobs []extractedJob
+	// 채널에서 호환하는 객체 타입
+	c := make(chan extractedJob)
 
 	pageUrl := url + "&tabType=recruit&Page_No=" + strconv.Itoa(page)
 	fmt.Println("Requesting pageURL:: ", pageUrl)
@@ -74,18 +83,23 @@ func getPage(page int, url string) []extractedJob {
 	searchCards := doc.Find(".list-post")
 
 	searchCards.Each(func(i int, card *goquery.Selection) {
-		job := extractJob(card)
-		jobs = append(jobs, job)
+		go extractJob(card, c)
+		// job := extractJob(card)
+		//jobs = append(jobs, job)
 	})
 
-	// for i := 0; i < searchCards.Length(); i++ {
-	// 	jobs = append(jobs, job)
-	// }
+	for i := 0; i < searchCards.Length(); i++ {
+		job := <-c
+		if job.gno != "" {
+			jobs = append(jobs, job)
+		}
+	}
 
-	return jobs
+	// return jobs
+	mainC <- jobs
 }
 
-func extractJob(card *goquery.Selection) extractedJob {
+func extractJob(card *goquery.Selection, c chan<- extractedJob) {
 	gno, _ := card.Attr("data-gno")
 	titleArea := card.Find(".post-list-info > .title")
 	title, _ := titleArea.Attr("title")
@@ -94,7 +108,8 @@ func extractJob(card *goquery.Selection) extractedJob {
 	location := CleanString(card.Find(".option > .loc.long").Text())
 	date := CleanString(card.Find(".option > .date").Text())
 
-	return extractedJob{
+	//return extractedJob{
+	c <- extractedJob{
 		gno:      gno,
 		title:    title,
 		exp:      exp,
@@ -113,6 +128,8 @@ func writeJobs(jobs []extractedJob) {
 	checkErr(err)
 
 	w := csv.NewWriter(file)
+
+	defer w.Flush()
 
 	headers := []string{"gno", "Title", "Experience", "Education", "Location", "Due-date"}
 	wErr := w.Write(headers)
