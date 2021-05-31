@@ -1,4 +1,4 @@
-module github.com/deli-hub/jobScrapper
+module github.com/deli-hub/jobKoreaScrapper
 
 go 1.16
 

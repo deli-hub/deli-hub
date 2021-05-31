@@ -14,8 +14,6 @@ import (
 
 type extractedJob struct {
 	gno      string
-	memSys   string
-	memType  string
 	title    string
 	exp      string
 	edu      string
@@ -89,19 +87,15 @@ func getPage(page int, url string) []extractedJob {
 
 func extractJob(card *goquery.Selection) extractedJob {
 	gno, _ := card.Attr("data-gno")
-	memSys, _ := card.Attr("data-mem-sys")
-	memType, _ := card.Attr("data-mem-type")
 	titleArea := card.Find(".post-list-info > .title")
 	title, _ := titleArea.Attr("title")
-	exp := cleanString(card.Find(".option > .exp").Text())
-	edu := cleanString(card.Find(".option > .edu").Text())
-	location := cleanString(card.Find(".option > .loc.long").Text())
-	date := cleanString(card.Find(".option > .date").Text())
+	exp := CleanString(card.Find(".option > .exp").Text())
+	edu := CleanString(card.Find(".option > .edu").Text())
+	location := CleanString(card.Find(".option > .loc.long").Text())
+	date := CleanString(card.Find(".option > .date").Text())
 
 	return extractedJob{
 		gno:      gno,
-		memSys:   memSys,
-		memType:  memType,
 		title:    title,
 		exp:      exp,
 		edu:      edu,
@@ -110,7 +104,7 @@ func extractJob(card *goquery.Selection) extractedJob {
 	}
 }
 
-func cleanString(str string) string {
+func CleanString(str string) string {
 	return strings.Join(strings.Fields(strings.TrimSpace(str)), " ")
 }
 
@@ -146,8 +140,4 @@ func checkCode(res *http.Response) {
 	if res.StatusCode != 200 {
 		log.Fatalln("Request failed with Status: ", res.StatusCode)
 	}
-}
-
-func main() {
-	scrape("java")
 }
